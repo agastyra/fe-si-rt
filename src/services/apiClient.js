@@ -94,4 +94,22 @@ export const fetchTipeTransaksi = async () => {
     })
 }
 
+export const postTipeTransaksi = async (data) => {
+    return apiClient.post('/tipe-transaksi', data, {
+        signal: AbortController.signal
+    })
+}
+
+export const putTipeTransaksi = async (id, data) => {
+    return apiClient.put(`/tipe-transaksi/${id}`, data, {
+        signal: AbortController.signal
+    })
+}
+
+export const deleteTipeTransaksi = async (id) => {
+    return apiClient.delete(`/tipe-transaksi/${id}`, {
+        signal: AbortController.signal
+    })
+}
+
 export default apiClient;
