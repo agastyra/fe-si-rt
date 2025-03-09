@@ -9,11 +9,14 @@ import TipeTransaksi from "./pages/tipeTransaksi.jsx";
 import TransaksiIuran from "./pages/transaksiIuran.jsx";
 import TransactionProvider from "./context/TransactionContext.jsx";
 import TransaksiPengeluaran from "./pages/transaksiPengeluaran.jsx";
+import DashboardProvider from "./context/DashboardContext.jsx";
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <Dashboard />,
+        element: <DashboardProvider>
+            <Dashboard />
+        </DashboardProvider>,
         errorElement: <ErrorPage />,
     },
     {

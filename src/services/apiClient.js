@@ -193,4 +193,11 @@ export const deleteTransaksi = async (id) => {
     })
 }
 
+export const fetchMonthlyBillingSummary = async (params) => {
+    return apiClient.get("/report/monthly-billing-summary", {
+        signal: AbortController.signal,
+        params
+    })
+}
+
 export default apiClient;
