@@ -38,9 +38,10 @@ apiClient.interceptors.request.use(
     }
 );
 
-export const fetchRumah = async () => {
+export const fetchRumah = async (params = null) => {
     return apiClient.get('/rumah', {
-        signal: AbortController.signal
+        signal: AbortController.signal,
+        params
     })
 }
 
@@ -88,9 +89,10 @@ export const deletePenghuni = async (id) => {
     })
 }
 
-export const fetchTipeTransaksi = async () => {
+export const fetchTipeTransaksi = async (params = null) => {
     return apiClient.get('/tipe-transaksi', {
-        signal: AbortController.signal
+        signal: AbortController.signal,
+        params
     })
 }
 
@@ -108,6 +110,30 @@ export const putTipeTransaksi = async (id, data) => {
 
 export const deleteTipeTransaksi = async (id) => {
     return apiClient.delete(`/tipe-transaksi/${id}`, {
+        signal: AbortController.signal
+    })
+}
+
+export const fetchTransaksi = async () => {
+    return apiClient.get("/transaksi", {
+        signal: AbortController.signal
+    })
+}
+
+export const postTransaksi = async (data) => {
+    return apiClient.post("/transaksi", data, {
+        signal: AbortController.signal
+    })
+}
+
+export const putTransaksi = async (id, data) => {
+    return apiClient.put("/transaksi/" + id, data, {
+        signal: AbortController.signal
+    })
+}
+
+export const deleteTransaksi = async (id) => {
+    return apiClient.delete(`/transaksi/${id}`, {
         signal: AbortController.signal
     })
 }

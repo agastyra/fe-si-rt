@@ -10,7 +10,7 @@ function NavigationBar() {
             </Navbar.Brand>
             <Navbar.Toggle />
             <Navbar.Collapse>
-                <Navbar.Link as={Link} to="/" active={window.location.pathname === "/"}>
+                <Navbar.Link as={Link} to="/" active={window.location.pathname === "/" || window.location.pathname === "/pembayaran-iuran"}>
                     Dashboard
                 </Navbar.Link>
                 <Navbar.Link as={Link} to="/penghuni" active={window.location.pathname === "/penghuni"}>
