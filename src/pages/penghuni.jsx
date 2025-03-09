@@ -257,7 +257,7 @@ function Penghuni() {
                 <Modal.Body>
                     <form onSubmit={submit}>
                         <div className="space-y-6">
-                            <h3 className="text-xl font-medium text-gray-900 dark:text-white">Penghuni Baru</h3>
+                            <h3 className="text-xl font-medium text-gray-900 dark:text-white">Data Penghuni</h3>
                             <div>
                                 <div className="mb-2 block">
                                     <Label htmlFor="nama_lengkap" value="Nama Lengkap"/>

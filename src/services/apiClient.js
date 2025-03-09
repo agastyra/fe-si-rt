@@ -44,6 +44,24 @@ export const fetchRumah = async () => {
     })
 }
 
+export const postRumah = async (data) => {
+    return apiClient.post('/rumah', data, {
+        signal: AbortController.signal,
+    })
+}
+
+export const putRumah = async (id, data) => {
+    return apiClient.put(`/rumah/${id}`, data, {
+        signal: AbortController.signal,
+    })
+}
+
+export const deleteRumah = async (id) => {
+    return apiClient.delete(`/rumah/${id}`, {
+        signal: AbortController.signal
+    })
+}
+
 export const fetchPenghuni = async () => {
     return apiClient.get('/penghuni', {
         signal: AbortController.signal
