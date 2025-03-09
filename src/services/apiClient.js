@@ -114,9 +114,10 @@ export const deleteTipeTransaksi = async (id) => {
     })
 }
 
-export const fetchTransaksi = async () => {
+export const fetchTransaksi = async (params) => {
     return apiClient.get("/transaksi", {
-        signal: AbortController.signal
+        signal: AbortController.signal,
+        params
     })
 }
 

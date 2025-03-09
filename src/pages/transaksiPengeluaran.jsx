@@ -14,7 +14,6 @@ import {
 import {HiHome, HiOutlineExclamationCircle} from "react-icons/hi";
 import apiClient, {
     deleteTransaksi,
-    fetchRumah,
     fetchTipeTransaksi,
     fetchTransaksi,
     postTransaksi,
@@ -24,7 +23,7 @@ import {Fragment, useEffect, useState} from "react";
 import TransactionModal from "../components/Fragments/TransactionModal.jsx";
 import {useTransaction} from "../context/TransactionContext.jsx";
 
-function TransaksiIuran() {
+function TransaksiPengeluaran() {
     const [response, setResponse] = useState([])
     const [currentPage, setCurrentPage] = useState(1);
     const [openModal, setOpenModal] = useState(false);
@@ -36,13 +35,11 @@ function TransaksiIuran() {
     const [isSubmitted, setIsSubmitted] = useState(false)
 
     const [transaksi_id, setTransaksi_id] = useState(null)
-    const [rumah, setRumah] = useState([])
     const [tipeTransaksi, setTipeTransaksi] = useState([])
     const { transaksiDetail, setTransaksiDetail } = useTransaction()
 
     const [form, setForm] = useState({
         id: null,
-        rumah_id: undefined,
         tanggal_transaksi: new Date().toISOString().split('T')[0],
         no_transaksi: "",
         transaksi_detail: []
@@ -85,7 +82,6 @@ function TransaksiIuran() {
     const resetForm = () => {
         setForm({
             id: null,
-            rumah_id: undefined,
             tanggal_transaksi: new Date().toISOString().split('T')[0],
             no_transaksi: "",
             transaksi_detail: []
@@ -109,20 +105,9 @@ function TransaksiIuran() {
         value.no_transaksi.toLowerCase().includes(search.toLowerCase())
     );
 
-    const getRumah = async () => {
-        try {
-            const response = await fetchRumah({all: true});
-            setRumah(response.data.data);
-        } catch (e) {
-            if (e.name !== "AbortError") {
-                console.error(e.message);
-            }
-        }
-    };
-
     const getTipeTransaksi = async () => {
         try {
-            const response = await fetchTipeTransaksi({all: true, jenis: "Pemasukan"});
+            const response = await fetchTipeTransaksi({all: true, jenis: "Pengeluaran"});
             setTipeTransaksi(response.data.data);
         } catch (e) {
             if (e.name !== "AbortError") {
@@ -133,28 +118,29 @@ function TransaksiIuran() {
 
     const getTransaksi = async () => {
         try {
-            const response = await fetchTransaksi({jenis: "Pemasukan"});
+            const response = await fetchTransaksi({jenis: "Pengeluaran"});
             setResponse(response.data);
             setForm((prevForm) => ({
                 ...prevForm,
                 no_transaksi: response.data.transaction_number
             }));
         } catch (e) {
-            console.error(e.message);
+            if (e.name !== "AbortError") {
+                console.error(e.message);
+            }
         }
     };
-
 
     const getDetailTransaksi = async (id) => {
         try {
             const response = await apiClient.get(`/transaksi/${id}`);
-            const {rumah, no_transaksi,  tanggal_transaksi,  transaksi_detail} = response.data.data[0]
+            const {no_transaksi,  tanggal_transaksi,  transaksi_detail} = response.data.data[0]
 
             transaksi_detail.forEach((value) => {
                 setTransaksiDetail((prev) => [...prev, {tipe_transaksi_id: value.tipe_transaksi.id, nominal: parseInt(value.nominal), ...value}])
             })
 
-            setForm({id, rumah_id: rumah.id, no_transaksi,  tanggal_transaksi, transaksi_detail: transaksi_detail});
+            setForm({id, no_transaksi,  tanggal_transaksi, transaksi_detail: transaksi_detail});
         } catch (e) {
             console.error(e.message);
         }
@@ -224,14 +210,13 @@ function TransaksiIuran() {
     }
 
     useEffect(() => {
-        getRumah()
         getTipeTransaksi()
         getTransaksi();
     }, []);
 
     return (
         <>
-            <DashboardLayout title={"Pembayaran Iuran"}>
+            <DashboardLayout title={"Pengeluaran Bulanan"}>
                 <DashboardLayout.Breadcump>
                     <Breadcrumb>
                         <Link to={"/"}>
@@ -239,7 +224,7 @@ function TransaksiIuran() {
                                 Dashboard
                             </Breadcrumb.Item>
                         </Link>
-                        <Breadcrumb.Item as={Link} to="/pembayaran-iuran">Pembayaran Iuran</Breadcrumb.Item>
+                        <Breadcrumb.Item as={Link} to="/pembayaran-iuran">Pengeluaran Bulanan</Breadcrumb.Item>
                     </Breadcrumb>
                 </DashboardLayout.Breadcump>
 
@@ -253,13 +238,12 @@ function TransaksiIuran() {
                                    className={"mb-5 w-1/2"}
                                    onChange={(e) => setSearch(e.target.value)}
                         />
-                        <Button onClick={() => setOpenModal(true)} className={"mb-5"}>Pembayaran Baru</Button>
+                        <Button onClick={() => setOpenModal(true)} className={"mb-5"}>Pengeluaran Baru</Button>
                     </div>
                     <Table striped>
                         <Table.Head>
                             <Table.HeadCell className="w-1/4">No. Transaksi</Table.HeadCell>
                             <Table.HeadCell className="w-1/4">Tanggal Transaksi</Table.HeadCell>
-                            <Table.HeadCell className="w-1/4">Rumah</Table.HeadCell>
                             <Table.HeadCell className="w-1/12">Action</Table.HeadCell>
                         </Table.Head>
                         <Table.Body>
@@ -268,7 +252,6 @@ function TransaksiIuran() {
                                     <Table.Row onClick={() => toggleRow(item.id)} className="cursor-pointer hover:bg-gray-100">
                                         <Table.Cell className="w-1/4">{item.no_transaksi}</Table.Cell>
                                         <Table.Cell className="w-1/4">{item.tanggal_transaksi}</Table.Cell>
-                                        <Table.Cell className="w-1/4">{item.rumah.blok}</Table.Cell>
                                         <Table.Cell className="w-1/12 flex gap-5">
                                             <a href="#" className="text-blue-500 hover:underline"
                                                onClick={(e) => { e.stopPropagation(); getDetailTransaksi(item.id); setOpenModal(true); }}>
@@ -284,8 +267,7 @@ function TransaksiIuran() {
                                     {openRowId === item.id && item.transaksi_detail && item.transaksi_detail.map((detail, indexDetail) => (
                                         <Table.Row key={indexDetail} className="bg-gray-50">
                                             <Table.Cell className="w-1/4 pl-12">{detail.tipe_transaksi.nama}</Table.Cell>
-                                            <Table.Cell className="w-1/4">{bulan[detail.periode_bulan - 1]}</Table.Cell>
-                                            <Table.Cell className="w-1/4">{detail.periode_tahun}</Table.Cell>
+                                            <Table.Cell className="w-1/4">{bulan[detail.periode_bulan - 1]} {detail.periode_tahun}</Table.Cell>
                                             <Table.Cell className="w-1/4">{Intl.NumberFormat('id-ID', {
                                                 style: 'currency',
                                                 currency: 'IDR',
@@ -314,7 +296,7 @@ function TransaksiIuran() {
             <TransactionModal openModal={openModal} setOpenModal={setOpenModal}>
                 <form onSubmit={handleSubmit}>
                     <div className="space-y-6">
-                        <h3 className="text-xl font-medium text-gray-900 dark:text-white">Pembayaran Iuran</h3>
+                        <h3 className="text-xl font-medium text-gray-900 dark:text-white">Pengeluaran Bulanan</h3>
                         <div>
                             <Label htmlFor="no_transaksi" value="No. Transaksi"/>
                             <TextInput id="no_transaksi" type="text" placeholder="TRX-xx" required readOnly
@@ -330,17 +312,6 @@ function TransaksiIuran() {
                                 onChange={(e) => setForm({...form, tanggal_transaksi: e.target.value})}
                                 className="bg-white block w-full text-gray-900 border border-gray-300 rounded-lg focus:ring-[#0891b2] focus:border-[#0891b2]"
                             />
-                        </div>
-                        <div>
-                            <Label htmlFor="rumah_id" value="Rumah"/>
-                            <Select id="rumah_id" required
-                                    value={form.rumah_id}
-                                    onChange={(e) => setForm({...form, rumah_id: e.target.value})}>
-                                <option selected disabled>Pilih Rumah</option>
-                                {rumah?.map((item, index) => (
-                                    <option key={index} value={item.id}>{item.blok}</option>
-                                ))}
-                            </Select>
                         </div>
 
                         <TransactionModal.Table tipeTransaksi={tipeTransaksi} />
@@ -376,4 +347,4 @@ function TransaksiIuran() {
     );
 }
 
-export default TransaksiIuran
+export default TransaksiPengeluaran
