@@ -18,22 +18,76 @@ apiClient.interceptors.request.use(
             config.headers.Authorization = `Bearer ${token}`;
         }
         return config;
-    },
+    }
+);
+
+let isRefreshing = false;
+let refreshSubscribers = [];
+
+const onTokenRefreshed = (accessToken) => {
+    refreshSubscribers.forEach((callback) => callback(accessToken));
+    refreshSubscribers = [];
+};
+
+const addRefreshSubscriber = (callback) => {
+    refreshSubscribers.push(callback);
+};
+
+apiClient.interceptors.response.use(
+    (response) => response,
     async (error) => {
-        if (error.response.status === 401) {
-            console.warn('Token expired, refreshing...');
+        const originalRequest = error.config;
+        const status = error.response ? error.response.status : null;
+
+        if (status === 401 && !originalRequest._retry) {
             const refreshToken = localStorage.getItem('refreshToken');
-            if (refreshToken) {
-                const res = await apiClient.post('/auth/refresh-token', {}, {
-                    headers: {
-                        Authorization: `Bearer ${refreshToken}`
-                    }
+
+            if (!refreshToken) {
+                console.error('No refresh token available');
+                return Promise.reject(error);
+            }
+
+            if (isRefreshing) {
+                return new Promise((resolve) => {
+                    addRefreshSubscriber((accessToken) => {
+                        originalRequest.headers['Authorization'] = `Bearer ${accessToken}`;
+                        resolve(apiClient(originalRequest));
+                    });
                 });
-                localStorage.setItem('accessToken', res.data.accessToken);
-                error.config.headers.Authorization = `Bearer ${res.data.accessToken}`;
-                return apiClient(error.config);
+            }
+
+            originalRequest._retry = true;
+            isRefreshing = true;
+
+            try {
+                const { data } = await axios.post('http://127.0.0.1:8000/api/auth/refresh-token', {}, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                        Accept: 'application/json',
+                        Authorization: `Bearer ${refreshToken}`,
+                    },
+                });
+
+                const newAccessToken = data.accessToken;
+
+                localStorage.setItem('accessToken', newAccessToken);
+                apiClient.defaults.headers['Authorization'] = `Bearer ${newAccessToken}`;
+
+                onTokenRefreshed(newAccessToken);
+
+                return apiClient(originalRequest);
+            } catch (refreshError) {
+                console.error('Failed to refresh token:', refreshError);
+                localStorage.removeItem('accessToken');
+                localStorage.removeItem('refreshToken');
+                window.location.href = '/login';
+                return Promise.reject(refreshError);
+            } finally {
+                isRefreshing = false;
             }
         }
+
         return Promise.reject(error);
     }
 );
