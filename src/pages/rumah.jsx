@@ -19,6 +19,7 @@ import apiClient, {
     fetchRumah, postRumah, putRumah,
 } from "../services/apiClient.js";
 import {useEffect, useState} from "react";
+import {useNavigate} from "react-router";
 
 function Rumah() {
     const [response, setResponse] = useState([])
@@ -141,7 +142,12 @@ function Rumah() {
         }
     }
 
+    const navigate = useNavigate()
+
     useEffect(() => {
+        if (!localStorage.getItem("accessToken")) {
+            navigate("/login")
+        }
         getRumah();
     }, []);
 

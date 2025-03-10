@@ -22,6 +22,7 @@ import apiClient, {
 import {Fragment, useEffect, useState} from "react";
 import TransactionModal from "../components/Fragments/TransactionModal.jsx";
 import {useTransaction} from "../context/TransactionContext.jsx";
+import {useNavigate} from "react-router";
 
 function TransaksiPengeluaran() {
     const [response, setResponse] = useState([])
@@ -209,7 +210,12 @@ function TransaksiPengeluaran() {
         }
     }
 
+    const navigate = useNavigate()
+
     useEffect(() => {
+        if (!localStorage.getItem("accessToken")) {
+            navigate("/login")
+        }
         getTipeTransaksi()
         getTransaksi();
     }, []);

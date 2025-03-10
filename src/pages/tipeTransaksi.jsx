@@ -9,6 +9,7 @@ import apiClient, {
     putTipeTransaksi
 } from "../services/apiClient.js";
 import {useEffect, useState} from "react";
+import {useNavigate} from "react-router";
 
 function TipeTransaksi() {
     const [response, setResponse] = useState([])
@@ -131,7 +132,12 @@ function TipeTransaksi() {
         }
     }
 
+    const navigate = useNavigate()
+
     useEffect(() => {
+        if (!localStorage.getItem("accessToken")) {
+            navigate("/login")
+        }
         getTipeTransaksi();
     }, []);
 
@@ -214,7 +220,7 @@ function TipeTransaksi() {
                             <h3 className="text-xl font-medium text-gray-900 dark:text-white">Data Tipe Transaksi</h3>
                             <div>
                                 <div className="mb-2 block">
-                                    <Label htmlFor="nama" value="Blok"/>
+                                    <Label htmlFor="nama" value="Nama"/>
                                 </div>
                                 <TextInput id="nama" type="text" placeholder="Iuran Satpam" required
                                            value={form.nama}

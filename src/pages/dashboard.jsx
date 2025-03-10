@@ -8,6 +8,7 @@ import MonthlyBillingSummary from "../components/Fragments/MonthlyBillingSummary
 import {useDashboard} from "../context/DashboardContext.jsx";
 import AnuallyBalanceSummary from "../components/Fragments/AnuallyBalanceSummary.jsx";
 import MonthlyReport from "../components/Fragments/MonthlyReport.jsx";
+import {useNavigate} from "react-router";
 
 function Dashboard() {
     const [masterData, setMasterData] = useState({
@@ -16,6 +17,7 @@ function Dashboard() {
         tipe_transaksi: 0
     })
     const {selectedBulan, selectedTahun, bulan, tahun, setSelectedBulan, setSelectedTahun} = useDashboard()
+    const navigate = useNavigate()
 
     const masterDataCount = async () => {
         try {
@@ -27,6 +29,9 @@ function Dashboard() {
     }
 
     useEffect(() => {
+        if (!localStorage.getItem("accessToken")) {
+            navigate("/login")
+        }
         masterDataCount();
     }, [])
 
@@ -44,7 +49,9 @@ function Dashboard() {
                             Bulanan</Dropdown.Item>
                     </Link>
                     <Dropdown.Divider/>
-                    <Dropdown.Item icon={HiClipboardList}>History Penghuni Rumah</Dropdown.Item>
+                    <Link to={"/penghuni-rumah"}>
+                        <Dropdown.Item icon={HiClipboardList}>History Penghuni Rumah</Dropdown.Item>
+                    </Link>
                 </Dropdown>
             </div>
 

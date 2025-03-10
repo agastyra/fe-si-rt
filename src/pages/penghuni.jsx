@@ -15,6 +15,7 @@ import {
 import {HiHome, HiOutlineExclamationCircle} from "react-icons/hi";
 import apiClient, {deletePenghuni, fetchPenghuni, postPenghuni, putPenghuni} from "../services/apiClient.js";
 import {useEffect, useState} from "react";
+import {useNavigate} from "react-router";
 
 function Penghuni() {
     const [response, setResponse] = useState([])
@@ -169,7 +170,12 @@ function Penghuni() {
         }
     }
 
+    const navigate = useNavigate()
+
     useEffect(() => {
+        if (!localStorage.getItem("accessToken")) {
+            navigate("/login")
+        }
         getPenghuni();
     }, []);
 
