@@ -10,6 +10,7 @@ import TransaksiIuran from "./pages/transaksiIuran.jsx";
 import TransactionProvider from "./context/TransactionContext.jsx";
 import TransaksiPengeluaran from "./pages/transaksiPengeluaran.jsx";
 import DashboardProvider from "./context/DashboardContext.jsx";
+import PenghuniRumah from "./pages/penghuniRumah.jsx";
 
 const router = createBrowserRouter([
     {
@@ -32,6 +33,11 @@ const router = createBrowserRouter([
     {
         path: "/tipe-transaksi",
         element: <TipeTransaksi/>,
+        errorElement: <ErrorPage />,
+    },
+    {
+        path: "/penghuni-rumah",
+        element: <PenghuniRumah />,
         errorElement: <ErrorPage />,
     },
     {

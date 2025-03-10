@@ -92,6 +92,12 @@ apiClient.interceptors.response.use(
     }
 );
 
+export const logoutRequest = async () => {
+    return apiClient.delete('/auth/logout', {
+        signal: AbortController.signal
+    })
+}
+
 export const fetchRumah = async (params = null) => {
     return apiClient.get('/rumah', {
         signal: AbortController.signal,
@@ -117,9 +123,10 @@ export const deleteRumah = async (id) => {
     })
 }
 
-export const fetchPenghuni = async () => {
+export const fetchPenghuni = async (params) => {
     return apiClient.get('/penghuni', {
-        signal: AbortController.signal
+        signal: AbortController.signal,
+        params
     })
 }
 
@@ -189,6 +196,31 @@ export const putTransaksi = async (id, data) => {
 
 export const deleteTransaksi = async (id) => {
     return apiClient.delete(`/transaksi/${id}`, {
+        signal: AbortController.signal
+    })
+}
+
+export const fetchPenghuniRumah = async (params) => {
+    return apiClient.get("/penghuni-rumah", {
+        signal: AbortController.signal,
+        params
+    })
+}
+
+export const postPenghuniRumah = async (data) => {
+    return apiClient.post("/penghuni-rumah", data, {
+        signal: AbortController.signal
+    })
+}
+
+export const putPenghuniRumah = async (id, data) => {
+    return apiClient.put(`/penghuni-rumah/${id}`, data, {
+        signal: AbortController.signal
+    })
+}
+
+export const deletePenghuniRumah = async (id) => {
+    return apiClient.delete(`/penghuni-rumah/${id}`, {
         signal: AbortController.signal
     })
 }
