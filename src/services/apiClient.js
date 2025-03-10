@@ -200,4 +200,11 @@ export const fetchMonthlyBillingSummary = async (params) => {
     })
 }
 
+export const fetchBalanceSummary = async (params) => {
+    return apiClient.get("/report/balance-summary", {
+        signal: AbortController.signal,
+        params
+    })
+}
+
 export default apiClient;

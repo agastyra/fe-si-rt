@@ -6,6 +6,7 @@ import {HiClipboardList, HiCurrencyDollar} from "react-icons/hi";
 import {Link} from "react-router-dom"
 import MonthlyBillingSummary from "../components/Fragments/MonthlyBillingSummary.jsx";
 import {useDashboard} from "../context/DashboardContext.jsx";
+import AnuallyBalanceSummary from "../components/Fragments/AnuallyBalanceSummary.jsx";
 
 function Dashboard() {
     const [masterData, setMasterData] = useState({
@@ -13,7 +14,7 @@ function Dashboard() {
         penghuni: 0,
         tipe_transaksi: 0
     })
-    const { selectedBulan, selectedTahun } = useDashboard()
+    const {selectedBulan, selectedTahun, bulan, tahun, setSelectedBulan, setSelectedTahun} = useDashboard()
 
     const masterDataCount = async () => {
         try {
@@ -26,7 +27,7 @@ function Dashboard() {
 
     useEffect(() => {
         masterDataCount();
-    }, [selectedBulan, selectedTahun])
+    }, [])
 
     return (
         <DashboardLayout title={"Welcome back Pak RT!"}>
@@ -45,7 +46,29 @@ function Dashboard() {
                     <Dropdown.Item icon={HiClipboardList}>History Penghuni Rumah</Dropdown.Item>
                 </Dropdown>
             </div>
-            <div className="grid grid-cols-3 gap-6 w-full">
+
+            <section className={"filter-container flex items-center gap-4"}>
+                <h4>Filters: </h4>
+                <Dropdown color={"light"} label={selectedBulan.value ?? "Bulan"}>
+                    {bulan.map((value, index) => (
+                        <Dropdown.Item key={index} onClick={() => {
+                            setSelectedBulan({id: index + 1, value})
+                        }}>{value}</Dropdown.Item>
+                    ))}
+                </Dropdown>
+                <Dropdown color={"light"} label={selectedTahun ?? "Tahun"}>
+                    {tahun.map((value, index) => (
+                        <Dropdown.Item key={index} onClick={() => {
+                            setSelectedTahun(value)
+                        }}>{value}</Dropdown.Item>
+                    ))}
+                </Dropdown>
+            </section>
+
+            <AnuallyBalanceSummary />
+            <MonthlyBillingSummary/>
+
+            <div className="grid grid-cols-3 gap-6 w-full mt-5 mb-10">
                 {masterData && Object.entries(masterData).map(([key, value]) => (
                     <Card className="w-full" key={key}>
                         <div className="flex items-center space-x-4">
@@ -104,8 +127,6 @@ function Dashboard() {
                     </Card>
                 ))}
             </div>
-
-            <MonthlyBillingSummary />
 
         </DashboardLayout>
     );

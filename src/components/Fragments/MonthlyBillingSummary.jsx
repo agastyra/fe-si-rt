@@ -6,14 +6,7 @@ import {useDashboard} from "../../context/DashboardContext.jsx";
 function MonthlyBillingSummary() {
     const [monthlyBillingSummary, setMonthlyBillingSummary] = useState([])
     const [currentPage, setCurrentPage] = useState(1)
-    const { selectedBulan, selectedTahun, setSelectedBulan, setSelectedTahun } = useDashboard()
-
-    const bulan = [
-        "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-    ]
-    const tahun = [
-        "2023", "2024", "2025"
-    ]
+    const { selectedBulan, selectedTahun, bulan } = useDashboard()
 
     const getMonthlyBillingSummary = async (page = 1) => {
         try {
@@ -43,30 +36,13 @@ function MonthlyBillingSummary() {
 
     useEffect(() => {
         getMonthlyBillingSummary()
+        setCurrentPage(1)
     }, [selectedBulan, selectedTahun]);
 
     return (
         <>
             <div className="flex justify-between items-center my-10 mb-5">
-                <h2 className={"font-bold text-2xl"}>Tagihan bulanan Iuran</h2>
-                <section className={"filter-container flex gap-4"}>
-                    <Dropdown color={"light"} label={selectedBulan.value ?? "Bulan"}>
-                        {bulan.map((value, index) => (
-                            <Dropdown.Item key={index} onClick={() => {
-                                setSelectedBulan({id: index + 1, value})
-                                setCurrentPage(1)
-                            }}>{value}</Dropdown.Item>
-                        ))}
-                    </Dropdown>
-                    <Dropdown color={"light"} label={selectedTahun ?? "Tahun"}>
-                        {tahun.map((value, index) => (
-                            <Dropdown.Item key={index} onClick={() => {
-                                setSelectedTahun(value)
-                                setCurrentPage(1)
-                            }}>{value}</Dropdown.Item>
-                        ))}
-                    </Dropdown>
-                </section>
+                <h2 className={"font-bold text-2xl"}>Tagihan Iuran Bulanan</h2>
             </div>
 
             <Table striped>
