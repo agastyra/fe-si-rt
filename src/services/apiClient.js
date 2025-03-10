@@ -207,4 +207,11 @@ export const fetchBalanceSummary = async (params) => {
     })
 }
 
+export const fetchMonthlyTransaction = async (params) => {
+    return apiClient.get("/report/transaction-report", {
+        signal: AbortController.signal,
+        params
+    })
+}
+
 export default apiClient;

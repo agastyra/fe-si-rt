@@ -28,7 +28,6 @@ function MonthlyBillingSummary() {
         try {
             const response = await getMonthlyBillingSummary(page)
             setMonthlyBillingSummary(response.data.data)
-            console.log(response)
         } catch (e) {
             // console.error(e.message);
         }

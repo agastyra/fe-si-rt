@@ -7,6 +7,7 @@ import {Link} from "react-router-dom"
 import MonthlyBillingSummary from "../components/Fragments/MonthlyBillingSummary.jsx";
 import {useDashboard} from "../context/DashboardContext.jsx";
 import AnuallyBalanceSummary from "../components/Fragments/AnuallyBalanceSummary.jsx";
+import MonthlyReport from "../components/Fragments/MonthlyReport.jsx";
 
 function Dashboard() {
     const [masterData, setMasterData] = useState({
@@ -67,6 +68,7 @@ function Dashboard() {
 
             <AnuallyBalanceSummary />
             <MonthlyBillingSummary/>
+            <MonthlyReport />
 
             <div className="grid grid-cols-3 gap-6 w-full mt-5 mb-10">
                 {masterData && Object.entries(masterData).map(([key, value]) => (
