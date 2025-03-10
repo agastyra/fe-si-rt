@@ -3,11 +3,7 @@ import DashboardLayout from "../components/Layouts/DashboardLayout.jsx";
 import {Breadcrumb, Table, Pagination, Alert, TextInput, Button, Modal, Label, Select} from "flowbite-react";
 import {HiHome, HiOutlineExclamationCircle} from "react-icons/hi";
 import apiClient, {
-    deletePenghuniRumah,
-    deleteTipeTransaksi, fetchPenghuni, fetchPenghuniRumah, fetchRumah,
-    fetchTipeTransaksi, postPenghuniRumah,
-    postTipeTransaksi, putPenghuniRumah,
-    putTipeTransaksi
+    deletePenghuniRumah, fetchPenghuni, fetchPenghuniRumah, fetchRumah, postPenghuniRumah, putPenghuniRumah
 } from "../services/apiClient.js";
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router";

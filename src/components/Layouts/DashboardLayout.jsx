@@ -1,4 +1,5 @@
 import NavigationBar from "../Fragments/Navbar.jsx";
+import FooterBar from "../Fragments/FooterBar.jsx";
 
 function DashboardLayout({title, children}) {
     return (
@@ -10,6 +11,8 @@ function DashboardLayout({title, children}) {
 
                 {children}
             </div>
+
+            <FooterBar />
         </>
     )
 }
