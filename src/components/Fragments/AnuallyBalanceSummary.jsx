@@ -100,6 +100,14 @@ const CustomTooltip = ({active, payload, label, bulan}) => {
                     Total Pengeluaran:
                     <span className="font-bold text-white ml-2">{Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(payload[1].value)}</span>
                 </p>
+                <p className="text-sm text-blue-400">
+                    Saldo Awal:
+                    <span className="font-bold text-white ml-2">{Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(payload[2].value)}</span>
+                </p>
+                <p className="text-sm text-blue-400">
+                    Saldo Akhir:
+                    <span className="font-bold text-white ml-2">{Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(payload[3].value)}</span>
+                </p>
             </div>
         );
     }
